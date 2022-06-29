@@ -32,7 +32,7 @@ class ArrayStack {
     }
 
     int pop() {
-        if (!isEmpty()) {
+        if (!empty()) {
             return stack[top--];
         }
         if (top < capacity / 4) {
@@ -44,7 +44,7 @@ class ArrayStack {
     }
 
     int peek() {
-        if (!isEmpty()) {
+        if (!empty()) {
             return stack[top];
         } else {
             throw new NoSuchElementException("empty stack");
@@ -63,24 +63,23 @@ class ArrayStack {
     void show() {
         System.out.println("-----");
 
-        for (int i = top; i >= 0; i--) {
-            System.out.println(stack[i]);
+        if (empty()) {
+            System.out.println("empty stack");
+        } else {
+            for (int i = getSize() - 1; i >= 0; i--) {
+                System.out.println(stack[i]);
+            }
         }
 
         System.out.println("-----");
-
     }
 
-    boolean isEmpty() {
+    boolean empty() {
         return top == -1;
     }
 
-    int stackSize() {
+    int getSize() {
         return top + 1;
-    }
-
-    void makeEmpty() {
-        top = -1;
     }
 
     public static void main(String[] args) {
