@@ -22,7 +22,7 @@ class ArrayStack {
     }
 
     void push(int x) {
-        if (!(top + 1 == capacity)) {
+        if ((top + 1 != capacity)) {
             top++;
             stack[top] = x;
         } else {
