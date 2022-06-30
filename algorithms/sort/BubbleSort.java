@@ -6,7 +6,7 @@ class BubbleSort {
     private static void bubbleSort(int[] a) {
         int n = a.length;
         boolean swapped = true;
-        for (int i = 0; i < n && swapped; i++) {
+        for (int i = 0; i < n - 1 && swapped; i++) {
             swapped = false;
             for (int j = 0; j < n - 1 - i; j++) {
                 if (a[j] > a[j + 1]) {
