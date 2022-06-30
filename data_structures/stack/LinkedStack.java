@@ -41,7 +41,7 @@ class LinkedStack<E> {
     E pop() {
         final Node<E> f = first;
         if (f == null) {
-            throw new NoSuchElementException();
+            throw new NoSuchElementException("empty stack");
         }
         final E element = f.item;
         final Node<E> next = f.next;

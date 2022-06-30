@@ -70,7 +70,7 @@ class LinkedQueue<E> {
     void show() {
         System.out.print("rear-> ");
         if (empty()) {
-            System.out.println("empty stack");
+            System.out.println("empty queue");
         } else {
             Node<E> l = last;
             for (int i = getSize(); i > 0; i--) {
