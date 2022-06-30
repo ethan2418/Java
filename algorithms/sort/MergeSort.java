@@ -1,6 +1,7 @@
 package algorithms.sort;
 
 import java.util.Arrays;
+import java.util.Random;
 
 class MergeSort {
     private static void merge(int[] a, int l, int m, int r) {
@@ -47,7 +48,11 @@ class MergeSort {
     }
 
     public static void main(String[] args) {
-        int[] a = {7, 9, 3, 6, 4, 0, 1, 2, 5, 8};
+        Random r = new Random();
+        int[] a = new int[15];
+        for (int i = 0; i < a.length; i++) {
+            a[i] = r.nextInt(100);
+        }
         System.out.println("before: \n" + Arrays.toString(a));
         mergeSort(a);
         System.out.println("after: \n" + Arrays.toString(a));
