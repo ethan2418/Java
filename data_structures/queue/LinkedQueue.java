@@ -16,7 +16,7 @@ class LinkedQueue<E> {
         }
     }
 
-    int size = 0;
+    int size;
     Node<E> first;
     Node<E> last;
 
@@ -73,7 +73,7 @@ class LinkedQueue<E> {
             System.out.println("empty queue");
         } else {
             Node<E> l = last;
-            for (int i = getSize(); i > 0; i--) {
+            for (int i = size(); i > 0; i--) {
                 System.out.print(l.item + " ");
                 l = l.prev;
             }
@@ -86,7 +86,7 @@ class LinkedQueue<E> {
         return size == 0;
     }
 
-    int getSize() {
+    int size() {
         return size;
     }
 

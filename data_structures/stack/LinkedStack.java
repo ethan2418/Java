@@ -16,7 +16,7 @@ class LinkedStack<E> {
         }
     }
 
-    int size = 0;
+    int size;
     Node<E> first;
     Node<E> last;
 
@@ -69,7 +69,7 @@ class LinkedStack<E> {
             System.out.println("empty stack");
         } else {
             Node<E> f = first;
-            for (int i = getSize(); i > 0; i--) {
+            for (int i = size(); i > 0; i--) {
                 System.out.println(f.item);
                 f = f.next;
             }
@@ -82,7 +82,7 @@ class LinkedStack<E> {
         return size == 0;
     }
 
-    int getSize() {
+    int size() {
         return size;
     }
 
