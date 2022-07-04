@@ -2,26 +2,28 @@ package data_structures.tree;
 
 import java.util.*;
 
-class BinarySearchTree<E extends Comparable<E>> {
+class AvlTree<E extends Comparable<E>> {
     static class Node<E> {
-        E item;
-        Node<E> left;
-        Node<E> right;
-
-        Node(E item) {
-            this(item, null, null);
+        Node(E theElement) {
+            this(theElement, null, null);
         }
 
         Node(E item, Node<E> left, Node<E> right) {
             this.item = item;
             this.left = left;
             this.right = right;
+            height = 0;
         }
+
+        E item;
+        Node<E> left;
+        Node<E> right;
+        int height;
     }
 
     Node<E> root;
 
-    BinarySearchTree() {
+    AvlTree() {
         root = null;
     }
 
@@ -41,7 +43,7 @@ class BinarySearchTree<E extends Comparable<E>> {
         } else if (compareResult > 0) {
             t.right = insert(x, t.right);
         }
-        return t;
+        return balance(t);
     }
 
     void remove(E x) {
@@ -65,110 +67,83 @@ class BinarySearchTree<E extends Comparable<E>> {
         } else {
             t = (t.left != null) ? t.left : t.right;
         }
+        return balance(t);
+    }
+
+    static final int ALLOWED_IMBALANCE = 1;
+
+    Node<E> balance(Node<E> t) {
+        if (t == null) {
+            return null;
+        }
+
+        if (height(t.left) - height(t.right) > ALLOWED_IMBALANCE) {
+            if (height(t.left.left) >= height(t.left.right)) {
+                t = rotateWithLeftChild(t);
+            } else {
+                t = doubleWithLeftChild(t);
+            }
+        } else if (height(t.right) - height(t.left) > ALLOWED_IMBALANCE) {
+            if (height(t.right.right) >= height(t.right.left)) {
+                t = rotateWithRightChild(t);
+            } else {
+                t = doubleWithRightChild(t);
+            }
+        }
+
+        t.height = Math.max(height(t.left), height(t.right)) + 1;
         return t;
     }
 
-    void preOrder() {
-        preOrder(root);
+    void checkBalance() {
+        checkBalance(root);
     }
 
-    void preOrder(Node<E> t) {
-        Deque<Node<E>> stack = new LinkedList<>();
-        stack.push(t);
-        while (!stack.isEmpty()) {
-            Node<E> node = stack.pop();
-            System.out.print(node.item + " ");
-            if (node.right != null) {
-                stack.push(node.right);
-            }
-            if (node.left != null) {
-                stack.push(node.left);
-            }
+    int checkBalance(Node<E> t) {
+        if (t == null) {
+            return -1;
         }
-    }
 
-
-    void inOrder() {
-        inOrder(root);
-    }
-
-    void inOrder(Node<E> t) {
-        Node<E> current = t;
-        Deque<Node<E>> stack = new LinkedList<>();
-        while (!stack.isEmpty() || current != null) {
-            while (current != null) {
-                stack.push(current);
-                current = current.left;
-            }
-            Node<E> node = stack.pop();
-            System.out.print(node.item + " ");
-            if (node.right != null) {
-                current = node.right;
-            }
+        int hl = checkBalance(t.left);
+        int hr = checkBalance(t.right);
+        if (Math.abs(height(t.left) - height(t.right)) > 1 ||
+                height(t.left) != hl || height(t.right) != hr) {
+            System.out.println("OOPS!!");
         }
+
+        return height(t);
     }
 
-    void postOrder() {
-        postOrder(root);
+    int height(Node<E> t) {
+        return t == null ? -1 : t.height;
     }
 
-    void postOrder(Node<E> t) {
-        Node<E> current = t;
-        Deque<Node<E>> stack = new LinkedList<>();
-        stack.push(t);
-        while (!stack.isEmpty()) {
-            Node<E> peek = stack.peek();
-            if (peek.left != null && peek.left != current && peek.right != current) {
-                stack.push(peek.left);
-            } else if (peek.right != null && peek.right != current) {
-                stack.push(peek.right);
-            } else {
-                System.out.print(stack.pop().item + " ");
-                current = peek;
-            }
-        }
+    Node<E> rotateWithLeftChild(Node<E> k2) {
+        Node<E> k1 = k2.left;
+        k2.left = k1.right;
+        k1.right = k2;
+        k2.height = Math.max(height(k2.left), height(k2.right)) + 1;
+        k1.height = Math.max(height(k1.left), k2.height) + 1;
+        return k1;
     }
 
-    void topdownLevelOrder() {
-        topdownLevelOrder(root);
+    Node<E> rotateWithRightChild(Node<E> k1) {
+        Node<E> k2 = k1.right;
+        k1.right = k2.left;
+        k2.left = k1;
+        k1.height = Math.max(height(k1.left), height(k1.right)) + 1;
+        k2.height = Math.max(height(k2.right), k1.height) + 1;
+        return k2;
     }
 
-    void topdownLevelOrder(Node<E> n) {
-        Deque<Node<E>> queue = new LinkedList<>();
-        queue.add(n);
-        while (!queue.isEmpty()) {
-            Node<E> current = queue.poll();
-            System.out.print(current.item + " ");
-            if (current.left != null) {
-                queue.add(current.left);
-            }
-            if (current.right != null) {
-                queue.add(current.right);
-            }
-        }
+    Node<E> doubleWithLeftChild(Node<E> k3) {
+        k3.left = rotateWithRightChild(k3.left);
+        return rotateWithLeftChild(k3);
     }
 
-    void bottomUpLevelOrder() {
-        bottomUpLevelOrder(root);
-    }
-
-    void bottomUpLevelOrder(Node<E> n) {
-        Deque<Node<E>> queue = new LinkedList<>();
-        Deque<E> stack = new LinkedList<>();
-        queue.add(n);
-        while (!queue.isEmpty()) {
-            Node<E> current = queue.poll();
-            stack.push(current.item);
-            if (current.right != null) {
-                queue.add(current.right);
-            }
-            if (current.left != null) {
-                queue.add(current.left);
-            }
-        }
-        while (!stack.isEmpty()) {
-            System.out.print(stack.pop() + " ");
-        }
+    Node<E> doubleWithRightChild(Node<E> k1) {
+        k1.right = rotateWithLeftChild(k1.right);
+        return rotateWithRightChild(k1);
     }
 
     E findMin() {
@@ -181,10 +156,11 @@ class BinarySearchTree<E extends Comparable<E>> {
     Node<E> findMin(Node<E> t) {
         if (t == null) {
             return null;
-        } else if (t.left == null) {
-            return t;
         }
-        return findMin(t.left);
+        while (t.left != null) {
+            t = t.left;
+        }
+        return t;
     }
 
     E findMax() {
@@ -195,12 +171,12 @@ class BinarySearchTree<E extends Comparable<E>> {
     }
 
     Node<E> findMax(Node<E> t) {
-        if (t != null) {
-            while (t.right != null) {
-                t = t.right;
-            }
+        if (t == null) {
+            return null;
         }
-
+        while (t.right != null) {
+            t = t.right;
+        }
         return t;
     }
 
@@ -209,19 +185,18 @@ class BinarySearchTree<E extends Comparable<E>> {
     }
 
     boolean contains(E x, Node<E> t) {
-        if (t == null) {
-            return false;
-        }
+        while (t != null) {
+            int compareResult = x.compareTo(t.item);
 
-        int compareResult = x.compareTo(t.item);
-
-        if (compareResult < 0) {
-            return contains(x, t.left);
-        } else if (compareResult > 0) {
-            return contains(x, t.right);
-        } else {
-            return true;
+            if (compareResult < 0) {
+                t = t.left;
+            } else if (compareResult > 0) {
+                t = t.right;
+            } else {
+                return true;
+            }
         }
+        return false;
     }
 
     void makeEmpty() {
@@ -230,14 +205,6 @@ class BinarySearchTree<E extends Comparable<E>> {
 
     boolean isEmpty() {
         return root == null;
-    }
-
-    int height(Node<E> t) {
-        if (t == null) {
-            return 0;
-        } else {
-            return 1 + Math.max(height(t.left), height(t.right));
-        }
     }
 
     static class BinaryTreePrinter<E> {
@@ -327,34 +294,17 @@ class BinarySearchTree<E extends Comparable<E>> {
             }
             return true;
         }
-
     }
 
     public static void main(String[] args) {
-        BinarySearchTree<Integer> bst = new BinarySearchTree<>();
+        AvlTree<Integer> avlt = new AvlTree<>();
         Random r = new Random();
 
         for (int i = 0; i < 10; i++) {
-            bst.insert(r.nextInt(100));
+            avlt.insert(r.nextInt(100));
         }
 
         BinaryTreePrinter<Integer> printer = new BinaryTreePrinter<>();
-        printer.printNode(bst.root);
-
-        System.out.print("preorder: \n");
-        bst.preOrder();
-        System.out.println();
-        System.out.print("inorder: \n");
-        bst.inOrder();
-        System.out.println();
-        System.out.print("postorder: \n");
-        bst.postOrder();
-        System.out.println();
-        System.out.print("topdown level order: \n");
-        bst.topdownLevelOrder();
-        System.out.println();
-        System.out.print("bottom-up level order: \n");
-        bst.bottomUpLevelOrder();
-        System.out.println();
+        printer.printNode(avlt.root);
     }
 }
