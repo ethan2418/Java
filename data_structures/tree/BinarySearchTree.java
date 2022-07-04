@@ -240,94 +240,120 @@ class BinarySearchTree<E extends Comparable<E>> {
         }
     }
 
-    static class BinaryTreePrinter<E> {
-        void printNode(Node<E> root) {
-            int maxLevel = maxLevel(root);
+    void print(Node<E> root) {
+        List<List<String>> lines = new ArrayList<>();
 
-            printNodeInternal(Collections.singletonList(root), 1, maxLevel);
+        List<Node<E>> level = new ArrayList<>();
+        List<Node<E>> next = new ArrayList<>();
+
+        level.add(root);
+        int nn = 1;
+
+        int widest = 0;
+
+        while (nn != 0) {
+            List<String> line = new ArrayList<>();
+
+            nn = 0;
+
+            for (Node<E> n : level) {
+                if (n == null) {
+                    line.add(null);
+
+                    next.add(null);
+                    next.add(null);
+                } else {
+                    String aa = Integer.toString((Integer) n.item);
+                    line.add(aa);
+                    if (aa.length() > widest) {
+                        widest = aa.length();
+                    }
+
+                    next.add(n.left);
+                    next.add(n.right);
+
+                    if (n.left != null) {
+                        nn++;
+                    }
+                    if (n.right != null) {
+                        nn++;
+                    }
+                }
+            }
+
+            if (widest % 2 == 1) {
+                widest++;
+            }
+
+            lines.add(line);
+
+            List<Node<E>> tmp = level;
+            level = next;
+            next = tmp;
+            next.clear();
         }
 
-        void printNodeInternal(List<Node<E>> nodes, int level, int maxLevel) {
-            if (nodes.isEmpty() || BinaryTreePrinter.isAllElementsNull(nodes)) {
-                return;
-            }
+        int perpiece = lines.get(lines.size() - 1).size() * (widest + 4);
+        for (int i = 0; i < lines.size(); i++) {
+            List<String> line = lines.get(i);
+            int hpw = (int) Math.floor(perpiece / 2f) - 1;
 
-            int floor = maxLevel - level;
-            int edgeLines = (int) Math.pow(2, (Math.max(floor - 1, 0)));
-            int firstSpaces = (int) Math.pow(2, (floor)) - 1;
-            int betweenSpaces = (int) Math.pow(2, (floor + 1)) - 1;
+            if (i > 0) {
+                for (int j = 0; j < line.size(); j++) {
 
-            BinaryTreePrinter.printWhitespaces(firstSpaces);
-
-            List<Node<E>> newNodes = new ArrayList<>();
-            for (Node<E> node : nodes) {
-                if (node != null) {
-                    System.out.print(node.item);
-                    newNodes.add(node.left);
-                    newNodes.add(node.right);
-                } else {
-                    newNodes.add(null);
-                    newNodes.add(null);
-                    System.out.print(" ");
-                }
-
-                BinaryTreePrinter.printWhitespaces(betweenSpaces);
-            }
-            System.out.println();
-
-            for (int i = 1; i <= edgeLines; i++) {
-                for (Node<E> node : nodes) {
-                    BinaryTreePrinter.printWhitespaces(firstSpaces - i);
-                    if (node == null) {
-                        BinaryTreePrinter.printWhitespaces(edgeLines + edgeLines + i + 1);
-                        continue;
+                    // split node
+                    char c = ' ';
+                    if (j % 2 == 1) {
+                        if (line.get(j - 1) != null) {
+                            c = (line.get(j) != null) ? '┴' : '┘';
+                        } else {
+                            if (j < line.size() && line.get(j) != null) {
+                                c = '└';
+                            }
+                        }
                     }
+                    System.out.print(c);
 
-                    if (node.left != null) {
-                        System.out.print("/");
+                    // lines and spaces
+                    if (line.get(j) == null) {
+                        for (int k = 0; k < perpiece - 1; k++) {
+                            System.out.print(" ");
+                        }
                     } else {
-                        BinaryTreePrinter.printWhitespaces(1);
+
+                        for (int k = 0; k < hpw; k++) {
+                            System.out.print(j % 2 == 0 ? " " : "─");
+                        }
+                        System.out.print(j % 2 == 0 ? "┌" : "┐");
+                        for (int k = 0; k < hpw; k++) {
+                            System.out.print(j % 2 == 0 ? "─" : " ");
+                        }
                     }
-
-                    BinaryTreePrinter.printWhitespaces(i + i - 1);
-
-                    if (node.right != null) {
-                        System.out.print("\\");
-                    } else {
-                        BinaryTreePrinter.printWhitespaces(1);
-                    }
-
-                    BinaryTreePrinter.printWhitespaces(edgeLines + edgeLines - i);
                 }
-
                 System.out.println();
             }
 
-            printNodeInternal(newNodes, level + 1, maxLevel);
-        }
+            for (String f : line) {
 
-        static void printWhitespaces(int count) {
-            for (int i = 0; i < count; i++) {
-                System.out.print(" ");
-            }
-        }
+                if (f == null) {
+                    f = "";
+                }
+                int gap1 = (int) Math.ceil(perpiece / 2f - f.length() / 2f);
+                int gap2 = (int) Math.floor(perpiece / 2f - f.length() / 2f);
 
-        int maxLevel(Node<E> node) {
-            if (node == null) {
-                return 0;
-            }
-            return Math.max(maxLevel(node.left), maxLevel(node.right)) + 1;
-        }
-
-        static <E> boolean isAllElementsNull(List<E> list) {
-            for (Object object : list) {
-                if (object != null) {
-                    return false;
+                // a number
+                for (int k = 0; k < gap1; k++) {
+                    System.out.print(" ");
+                }
+                System.out.print(f);
+                for (int k = 0; k < gap2; k++) {
+                    System.out.print(" ");
                 }
             }
-            return true;
-        }
+            System.out.println();
 
+            perpiece /= 2;
+        }
     }
 
     public static void main(String[] args) {
@@ -338,8 +364,7 @@ class BinarySearchTree<E extends Comparable<E>> {
             bst.insert(r.nextInt(100));
         }
 
-        BinaryTreePrinter<Integer> printer = new BinaryTreePrinter<>();
-        printer.printNode(bst.root);
+        bst.print(bst.root);
 
         System.out.print("preorder: \n");
         bst.preOrder();
