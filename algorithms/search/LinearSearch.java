@@ -3,7 +3,7 @@ package algorithms.search;
 import java.util.Arrays;
 
 class LinearSearch {
-    private static int linearSearch(int[] a, int x) {
+    static int linearSearch(int[] a, int x) {
         int n = a.length;
         for (int i = 0; i < n; i++) {
             if (a[i] == x) {

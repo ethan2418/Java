@@ -3,7 +3,7 @@ package algorithms.search;
 import java.util.Arrays;
 
 class BinarySearch {
-    private static int binarySearch(int[] a, int x) {
+    static int binarySearch(int[] a, int x) {
         int n = a.length;
         int l = 0;
         int r = n - 1;

@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Random;
 
 class InsertionSort {
-    private static void insertionSort(int[] a) {
+    static void insertionSort(int[] a) {
         int n = a.length;
         for (int i = 1; i < n; i++) {
             int t = a[i];

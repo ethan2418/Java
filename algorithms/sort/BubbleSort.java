@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Random;
 
 class BubbleSort {
-    private static void bubbleSort(int[] a) {
+    static void bubbleSort(int[] a) {
         int n = a.length;
         boolean swapped = true;
         for (int i = 0; i < n - 1 && swapped; i++) {

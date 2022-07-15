@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Random;
 
 class SelectionSort {
-    private static void selectionSort(int[] a) {
+    static void selectionSort(int[] a) {
         int n = a.length;
         boolean sorted = false;
         for (int size = n; !sorted && size > 1; size--) {

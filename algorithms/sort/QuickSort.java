@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Random;
 
 class QuickSort {
-    private static int partition(int[] a, int l, int r) {
+    static int partition(int[] a, int l, int r) {
         int pivot = a[r];
         int i = l - 1;
 
@@ -25,7 +25,7 @@ class QuickSort {
         return i + 1;
     }
 
-    private static void quickSort(int[] a, int l, int r) {
+    static void quickSort(int[] a, int l, int r) {
         if (l < r) {
             int p = partition(a, l, r);
             quickSort(a, l, p - 1);
@@ -33,7 +33,7 @@ class QuickSort {
         }
     }
 
-    private static void quickSort(int[] a) {
+    static void quickSort(int[] a) {
         int n = a.length;
         quickSort(a, 0, n - 1);
     }

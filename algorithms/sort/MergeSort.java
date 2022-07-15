@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Random;
 
 class MergeSort {
-    private static void merge(int[] a, int l, int m, int r) {
+    static void merge(int[] a, int l, int m, int r) {
         int i, j, k;
         int n1 = m - l + 1;
         int n2 = r - m;
@@ -33,7 +33,7 @@ class MergeSort {
         }
     }
 
-    private static void mergeSort(int[] a, int l, int r) {
+    static void mergeSort(int[] a, int l, int r) {
         if (l < r) {
             int m = l + (r - l) / 2;
             mergeSort(a, l, m);
@@ -42,7 +42,7 @@ class MergeSort {
         }
     }
 
-    private static void mergeSort(int[] a) {
+    static void mergeSort(int[] a) {
         int n = a.length;
         mergeSort(a, 0, n - 1);
     }

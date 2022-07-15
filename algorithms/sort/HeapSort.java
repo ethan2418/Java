@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Random;
 
 class HeapSort {
-    private static void heapify(int[] a, int n, int i) {
+    static void heapify(int[] a, int n, int i) {
         int largest = i;
         int l = 2 * i + 1;
         int r = 2 * i + 2;
@@ -26,7 +26,7 @@ class HeapSort {
         }
     }
 
-    private static void heapSort(int[] a) {
+    static void heapSort(int[] a) {
         int n = a.length;
         for (int i = n - 1; i >= 0; i--) {
             heapify(a, n, i);
